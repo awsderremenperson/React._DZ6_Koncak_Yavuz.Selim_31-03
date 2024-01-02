@@ -1,21 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 
-const ExampleWithEffect = () => {
-    const [count, setCount] = useState(0);
+const ExampleComponent = () => {
+    const [number, setNumber] = useState(0);
 
-    // useEffect будет выполняться после каждого рендеринга компонента
-    useEffect(() => {
-        document.title = `Вы кликнули ${count} раз`;
-    }, [count]); // зависимость, если count изменится, useEffect выполнится заново
+    const memoizedResult = useMemo(() => {
+        console.log('Вычисление результата useMemo');
+        return number + number * 2;
+    }, [number]);
+
+    const memoizedCallback = useCallback(() => {
+        console.log('Изменение числа через useCallback');
+        setNumber((prevNumber) => prevNumber + 1);
+    }, []);
 
     return (
         <div>
-            <p>Вы кликнули {count} раз</p>
-            <button onClick={() => setCount(count + 1)}>
-                Нажми меня
-            </button>
+            <p>Число: {number}</p>
+            <p>Результат сложения числа и его удвоенного значения: {memoizedResult}</p>
+            <button onClick={memoizedCallback}>Увеличить число</button>
         </div>
     );
 };
 
-export default ExampleWithEffect;
+export default ExampleComponent;
